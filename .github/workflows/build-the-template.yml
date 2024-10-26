@@ -1,0 +1,36 @@
+name: Publish BlazorStaticMinimalBlog
+
+on:
+  push:
+    branches:
+      - main  # Trigger this workflow on pushes to the main branch
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for accurate commit info
+
+      - name: Install BlazorStatic.Templates
+        run: dotnet new install BlazorStatic.Templates
+
+      - name: Create BlazorStaticMinimalBlog project
+        run: dotnet new BlazorStaticMinimalBlog -o BlazorStaticMinimalBlog
+
+      - name: Build the project
+        working-directory: BlazorStaticMinimalBlog
+        run: dotnet publish -c Release
+
+      - name: Push to by-build branch of BlazorStatic/BlazorStaticMinimalBlog
+        run: |
+          git init
+          git remote add origin https://x-access-token:${{ secrets.BLAZORSTATICMINIMALBLOG_REPO_TOKEN }}@github.com/BlazorStatic/BlazorStaticMinimalBlog.git
+          git checkout -b by-build
+          git add -A
+          git commit -m "Publishing BlazorStaticMinimalBlog to by-build branch"
+          git push -f origin by-build
+        working-directory: BlazorStaticMinimalBlog
