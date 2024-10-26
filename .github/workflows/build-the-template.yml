@@ -22,14 +22,11 @@ jobs:
 
       - name: Push to by-build branch of BlazorStatic/BlazorStaticMinimalBlog
         run: |
-          git init
+          git init --initial-branch=by-build
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git remote add origin https://x-access-token:${{ secrets.BLAZORSTATICMINIMALBLOG_REPO_TOKEN }}@github.com/BlazorStatic/BlazorStaticMinimalBlog.git
-          git checkout --orphan by-build
-          git rm -rf .  # Remove all files to start fresh on the orphan branch
-          cp -r BlazorStaticMinimalBlog/* .
-          git add -A
+          git add .
           git commit -m "Publishing BlazorStaticMinimalBlog to orphaned by-build branch"
           git push -f origin by-build
         working-directory: BlazorStaticMinimalBlog
