@@ -10,10 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Fetch all history for accurate commit info
+      - uses: actions/checkout@4
 
       - name: Install BlazorStatic.Templates and create the blog
         run: |
@@ -27,6 +24,6 @@ jobs:
           git config user.email "action@github.com"
           git remote add origin https://x-access-token:${{ secrets.BLAZORSTATICMINIMALBLOG_REPO_TOKEN }}@github.com/BlazorStatic/BlazorStaticMinimalBlog.git
           git add .
-          git commit -m "Publishing BlazorStaticMinimalBlog to orphaned by-build branch"
+          git commit -m "version 1.0.2"
           git push -f origin by-build
         working-directory: BlazorStaticMinimalBlog
